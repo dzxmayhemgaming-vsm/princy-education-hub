@@ -195,10 +195,10 @@ const spaRouter = {
           <div class="hero-graphic">
             <div class="decorative-ring"></div>
             <div class="glass-card hero-avatar-card" style="width: 250px; background: rgba(26, 36, 57, 0.65);">
-              <div class="avatar-badge"><i class="fa-solid fa-user-tie"></i></div>
-              <h3>Vikram Singh</h3>
-              <p>RAS Rank 14, Mentor</p>
-              <div style="margin-top: 15px; font-size: 0.8rem; color: var(--accent); font-weight: 700; background: var(--accent-bg); padding: 4px 10px; border-radius: 20px; display: inline-block;">Top Advisor</div>
+              <div class="avatar-badge"><i class="fa-solid fa-graduation-cap"></i></div>
+              <h3>RPSC Advisory Panel</h3>
+              <p>State Toppers & Mentors</p>
+              <div style="margin-top: 15px; font-size: 0.8rem; color: var(--accent); font-weight: 700; background: var(--accent-bg); padding: 4px 10px; border-radius: 20px; display: inline-block;">Expert Board</div>
             </div>
           </div>
         </div>
