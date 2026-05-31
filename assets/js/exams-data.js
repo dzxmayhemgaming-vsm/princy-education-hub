@@ -202,7 +202,7 @@ const EXAMS_DATABASE = {
       id: "ras-foundation",
       categoryId: "ras",
       title: "RAS Complete Foundation Study Course 2026",
-      instructor: "Dr. Vikram Singh & Team",
+      instructor: "RPSC Board Advisory Board",
       rating: 4.9,
       students: "12,450+",
       progress: 35, // Progress percentage for active student
@@ -312,7 +312,7 @@ const EXAMS_DATABASE = {
       id: "reet-l2-target",
       categoryId: "reet",
       title: "REET Level 2 Master Study Course 2026",
-      instructor: "Princy Madam & Specialists",
+      instructor: "REET Exam Selection Experts",
       rating: 4.8,
       students: "18,900+",
       progress: 60,
