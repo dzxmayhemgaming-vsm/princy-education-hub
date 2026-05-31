@@ -1,7 +1,7 @@
 /* 
  * COURSES & STUDY DESK CONTROLLER - PRINCY EDUCATION HUB
  * Interactive Reading Desk, Chapter-wise Study Materials, Progress Trackers, and Toast Alerts
- * Replaces video players entirely with structured learning topic consoles.
+ * Integrated dynamic Topic MCQ self-assessments and multi-chapter PDF compilation exports.
  */
 
 const coursesController = {
@@ -156,6 +156,44 @@ const coursesController = {
       `;
     });
     
+    // Compile integrated Topic Quiz HTML
+    let quizHtml = '';
+    if (topic.quiz && topic.quiz.length > 0) {
+      let questionsHtml = '';
+      topic.quiz.forEach((q, qIdx) => {
+        let optionsHtml = '';
+        q.options.forEach((opt, optIdx) => {
+          optionsHtml += `
+            <div class="option-item" style="padding: 12px 16px; font-size: 0.92rem; margin-bottom: 8px;" onclick="window.coursesController.checkTopicQuiz(${qIdx}, ${optIdx}, ${q.correct}, this)">
+              <div class="option-index" style="width: 24px; height: 24px; font-size: 0.8rem; font-weight:700;">${String.fromCharCode(65 + optIdx)}</div>
+              <div class="option-text">${opt}</div>
+            </div>
+          `;
+        });
+        
+        questionsHtml += `
+          <div class="glass-card" style="padding: 24px; border-radius: 8px; margin-bottom: 20px; background: rgba(255,255,255,0.015);">
+            <h4 style="font-size: 1rem; margin-bottom: 14px; color: var(--accent); font-weight: 700;"><i class="fa-regular fa-circle-question" style="margin-right: 6px;"></i> अभ्यास प्रश्न ${qIdx + 1}: ${q.question}</h4>
+            <div class="options-list" style="gap: 8px; margin-bottom: 0;">
+              ${optionsHtml}
+            </div>
+            <div class="review-explanation" id="quiz-exp-${qIdx}" style="display: none; margin-top: 15px; font-size: 0.88rem; padding: 14px; border-left: 4px solid var(--accent); border-radius: 0 var(--border-radius-sm) var(--border-radius-sm) 0; background: var(--accent-bg);">
+              <b>व्याख्या / Explanation:</b> ${q.explanation}
+            </div>
+          </div>
+        `;
+      });
+      
+      quizHtml = `
+        <div style="margin-top: 50px; border-top: 2px solid var(--card-border); padding-top: 30px;">
+          <h3 style="font-size: 1.3rem; margin-bottom: 20px; color: var(--text-main); font-weight: 800;">
+            <i class="fa-solid fa-square-poll-vertical" style="color: var(--accent); margin-right: 8px;"></i> टॉपिक टेस्ट / Practice Questions
+          </h3>
+          ${questionsHtml}
+        </div>
+      `;
+    }
+    
     container.innerHTML = `
       <div class="fade-in-section">
         <!-- Header -->
@@ -166,9 +204,14 @@ const coursesController = {
             </span>
             <h2 style="font-size: 1.25rem; font-weight: 700;">${topic.title}</h2>
           </div>
-          <button class="btn btn-secondary" onclick="window.spaRouter.navigate('courses')">
-            <i class="fa-solid fa-chevron-left"></i> Back to Courses
-          </button>
+          <div style="display: flex; gap: 10px;">
+            <button class="btn btn-secondary" style="background: var(--success); color: white; border: none; font-size: 0.85rem;" onclick="window.coursesController.exportCoursePDF()">
+              <i class="fa-solid fa-file-pdf"></i> पूरा कोर्स PDF डाउनलोड करें
+            </button>
+            <button class="btn btn-secondary" onclick="window.spaRouter.navigate('courses')">
+              <i class="fa-solid fa-chevron-left"></i> Back to Courses
+            </button>
+          </div>
         </div>
         
         <div class="classroom-layout">
@@ -187,6 +230,9 @@ const coursesController = {
                   ${topic.content}
                 </div>
               </div>
+              
+              <!-- Integrated Practice Quiz renders here -->
+              ${quizHtml}
               
               <!-- Action Complete Trigger -->
               <div style="margin-top: 40px; border-top: 1.5px solid var(--card-border); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
@@ -282,6 +328,148 @@ const coursesController = {
     
     // Rerender layout to show completed tick on playlist sidebar
     this.renderClassroomWorkspace(document.getElementById('app-viewport-container'));
+  },
+  
+  checkTopicQuiz(qIdx, optIdx, correctIdx, element) {
+    const list = element.parentElement;
+    if (list.getAttribute('data-checked') === 'true') return;
+    list.setAttribute('data-checked', 'true');
+    
+    const items = list.querySelectorAll('.option-item');
+    items.forEach((item, idx) => {
+      if (idx === correctIdx) {
+        item.classList.add('review-option-correct');
+        const badge = item.querySelector('.option-index');
+        badge.style.background = 'var(--success)';
+        badge.style.borderColor = 'var(--success)';
+        badge.style.color = 'white';
+        badge.innerHTML = '<i class="fa-solid fa-check"></i>';
+      } else if (idx === optIdx && optIdx !== correctIdx) {
+        item.classList.add('review-option-incorrect');
+        const badge = item.querySelector('.option-index');
+        badge.style.background = 'var(--danger)';
+        badge.style.borderColor = 'var(--danger)';
+        badge.style.color = 'white';
+        badge.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      } else {
+        item.style.opacity = '0.5';
+        item.style.pointerEvents = 'none';
+      }
+    });
+    
+    // Reveal explanation
+    const exp = document.getElementById(`quiz-exp-${qIdx}`);
+    if (exp) {
+      exp.style.display = 'block';
+      exp.style.animation = 'fadeInUp 0.3s ease';
+    }
+    
+    if (optIdx === correctIdx) {
+      window.showToastAlert("बिल्कुल सही उत्तर! (+1 Point)", "success");
+    } else {
+      window.showToastAlert("गलत उत्तर! सही हल नीचे देखें।", "danger");
+    }
+  },
+  
+  exportCoursePDF() {
+    const course = this.activeCourse;
+    if (!course) return;
+    
+    window.showToastAlert("Generating printable course book PDF...", "warning");
+    
+    setTimeout(() => {
+      let content = '';
+      course.chapters.forEach((ch, chIdx) => {
+        content += `<h1 style="font-size: 2.2rem; color: #1e3a8a; border-bottom: 3px solid #3b82f6; padding-bottom: 12px; margin-top: 50px; page-break-before: always;">Chapter ${chIdx + 1}: ${ch.title}</h1>`;
+        
+        ch.topics.forEach((t, tIdx) => {
+          content += `
+            <div style="margin-top: 30px;">
+              <h2 style="font-size: 1.6rem; color: #0f172a; border-bottom: 1.5px solid #e2e8f0; padding-bottom: 8px; margin-bottom: 15px;">Unit ${chIdx + 1}.${tIdx + 1}: ${t.title}</h2>
+              <div style="font-size: 0.85rem; color: #64748b; font-style: italic; margin-bottom: 15px;">Estimated reading time: ${t.duration}</div>
+              <div style="line-height: 1.8; color: #334155; font-size: 1.05rem;">
+                ${t.content}
+              </div>
+            </div>
+          `;
+        });
+      });
+      
+      const printWindow = window.open('', '_blank');
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <title>${course.title} - Complete Study Guide</title>
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap">
+          <style>
+            body {
+              font-family: 'Inter', sans-serif;
+              padding: 40px;
+              color: #1e293b;
+              max-width: 800px;
+              margin: 0 auto;
+              line-height: 1.7;
+            }
+            h1, h2, h3 {
+              font-family: 'Outfit', sans-serif;
+            }
+            .study-bullets {
+              margin: 15px 0 15px 25px;
+            }
+            .study-bullets li {
+              margin-bottom: 8px;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin: 20px 0;
+            }
+            th, td {
+              border: 1px solid #cbd5e1;
+              padding: 10px 14px;
+              text-align: left;
+            }
+            th {
+              background-color: #f1f5f9;
+            }
+            @media print {
+              body {
+                padding: 0;
+              }
+              .no-print {
+                display: none;
+              }
+            }
+          </style>
+        </head>
+        <body>
+          <div class="no-print" style="background: #f1f5f9; border: 1px solid #cbd5e1; padding: 15px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+            <h3 style="margin-top:0;">Printable Course Book Preview</h3>
+            <p style="font-size:0.9rem; color:#64748b; margin-bottom:15px;">This page compiles all chapters and complete textbook notes in a clean, print-friendly template. Use the button below or press <b>Ctrl + P</b> to save as a high-quality PDF.</p>
+            <button onclick="window.print()" style="padding: 10px 24px; background: #3b82f6; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">Print / Save as PDF</button>
+          </div>
+          
+          <div style="text-align: center; padding: 80px 0; border-bottom: 4px double #e2e8f0; page-break-after: always;">
+            <div style="font-size: 1.2rem; color: #3b82f6; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Princy Education Hub</div>
+            <h1 style="font-size: 3rem; margin: 20px 0 10px; color: #0f172a; font-weight: 800;">${course.title}</h1>
+            <div style="font-size: 1.1rem; color: #64748b;">Instructor: ${course.instructor}</div>
+            <div style="font-size: 0.95rem; color: #94a3b8; margin-top: 150px;">Compiled dynamically by AI Assistant using NCERT/RBSE Reference Material.</div>
+          </div>
+          
+          ${content}
+          
+          <script>
+            window.onload = function() {
+              setTimeout(function() { window.print(); }, 800);
+            };
+          </script>
+        </body>
+        </html>
+      `);
+      printWindow.document.close();
+      
+    }, 1500);
   }
 };
 
