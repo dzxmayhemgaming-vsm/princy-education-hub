@@ -99,6 +99,7 @@ const spaRouter = {
     tests: 'renderTests',
     courses: 'renderCourses',
     pdfs: 'renderPdfs',
+    'ai-builder': 'renderAIBuilder',
     'gk-quiz': 'renderGKQuiz'
   },
   
@@ -290,6 +291,12 @@ const spaRouter = {
   renderPdfs(container) {
     if (window.pdfVaultController) {
       window.pdfVaultController.renderIndex(container);
+    }
+  },
+  
+  renderAIBuilder(container) {
+    if (window.aiBuilderController) {
+      window.aiBuilderController.renderIndex(container);
     }
   },
   
