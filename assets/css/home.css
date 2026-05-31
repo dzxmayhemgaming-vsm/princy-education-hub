@@ -1,0 +1,372 @@
+/* 
+ * HOMEPAGE & DASHBOARD STYLES - PRINCY EDUCATION HUB
+ * Styled hero containers, grid structures, stats displays, and call-outs
+ */
+
+/* --- Hero Section --- */
+.hero-section {
+  position: relative;
+  padding: 80px 0 60px;
+  background: radial-gradient(circle at 100% 0%, rgba(255, 170, 51, 0.12) 0%, transparent 40%),
+              radial-gradient(circle at 0% 100%, rgba(30, 80, 180, 0.15) 0%, transparent 50%);
+  border-radius: var(--border-radius-lg);
+  margin-bottom: 50px;
+  overflow: hidden;
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 40px;
+  align-items: center;
+}
+
+.hero-tagline {
+  font-size: 0.9rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+  padding: 6px 16px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 20px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 170, 51, 0.2);
+}
+
+.hero-title {
+  font-size: 3.2rem;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  font-weight: 800;
+}
+
+.hero-title span {
+  background: linear-gradient(135deg, var(--accent) 0%, #ff8800 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-desc {
+  color: var(--text-sub);
+  font-size: 1.1rem;
+  margin-bottom: 35px;
+  max-width: 600px;
+}
+
+/* --- Interactive Course Search --- */
+.search-box-wrapper {
+  position: relative;
+  max-width: 500px;
+  margin-bottom: 40px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 16px 24px 16px 54px;
+  border-radius: var(--border-radius-sm);
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: var(--transition-smooth);
+  box-shadow: var(--card-shadow);
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 25px rgba(255, 170, 51, 0.2);
+  transform: scale(1.01);
+}
+
+.search-box-wrapper i {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-sub);
+  font-size: 1.2rem;
+  transition: var(--transition-smooth);
+}
+
+.search-input:focus + i {
+  color: var(--accent);
+}
+
+/* --- Hero Banner Display (Right Side) --- */
+.hero-graphic {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-avatar-card {
+  padding: 30px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.avatar-badge {
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.8rem;
+  color: #fff;
+  margin: 0 auto 20px;
+  box-shadow: 0 10px 25px rgba(30, 58, 138, 0.4);
+}
+
+.hero-avatar-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 8px;
+}
+
+.hero-avatar-card p {
+  color: var(--text-sub);
+  font-size: 0.9rem;
+}
+
+.decorative-ring {
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  border: 2px dashed var(--card-border);
+  border-radius: 50%;
+  z-index: 1;
+  animation: rotateClockwise 30s linear infinite;
+}
+
+@keyframes rotateClockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* --- General Section Header --- */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 30px;
+}
+
+.section-title {
+  font-size: 2rem;
+  position: relative;
+}
+
+.section-title span {
+  color: var(--accent);
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 4px;
+  background: var(--accent);
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.section-subtitle {
+  color: var(--text-sub);
+  font-size: 0.95rem;
+  margin-top: 5px;
+}
+
+/* --- Quick Stats Grid --- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  margin-bottom: 50px;
+}
+
+.stat-item {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.stat-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--accent);
+  background: var(--accent-bg);
+}
+
+.stat-number {
+  font-size: 1.8rem;
+  font-weight: 800;
+  font-family: var(--font-headings);
+  line-height: 1.2;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+  font-weight: 500;
+}
+
+/* --- Exams Category Showcase --- */
+.exams-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 50px;
+}
+
+.exam-card {
+  padding: 30px 24px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.exam-icon-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: var(--text-light);
+  margin-bottom: 20px;
+  transition: var(--transition-smooth);
+}
+
+.exam-card:hover .exam-icon-circle {
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+.exam-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.exam-fullname {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.exam-desc {
+  font-size: 0.9rem;
+  color: var(--text-sub);
+  margin-bottom: 20px;
+  height: 54px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.exam-meta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-top: 1px solid var(--card-border);
+  padding-top: 16px;
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.exam-meta-tags span {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+/* --- Dynamic Features Section --- */
+.features-split-grid {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 40px;
+  margin-bottom: 50px;
+}
+
+/* --- GK Booster Card --- */
+.gk-promo-card {
+  padding: 35px;
+  background: linear-gradient(135deg, rgba(26,36,57,0.7) 0%, rgba(13,20,35,0.9) 100%);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.gk-badge-flash {
+  animation: pulseLight 2s infinite;
+}
+
+@keyframes pulseLight {
+  0% { box-shadow: 0 0 0 0 rgba(255, 170, 51, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 170, 51, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 170, 51, 0); }
+}
+
+.gk-promo-card h2 {
+  font-size: 2rem;
+  line-height: 1.3;
+  margin: 15px 0 10px;
+}
+
+.gk-promo-card p {
+  color: var(--text-sub);
+  margin-bottom: 24px;
+}
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 992px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+    text-align: center;
+  }
+  
+  .search-box-wrapper {
+    margin: 0 auto 30px;
+  }
+  
+  .stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .features-split-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: 2.3rem;
+  }
+  
+  .stats-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+}
