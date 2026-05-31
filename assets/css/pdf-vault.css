@@ -1,0 +1,320 @@
+/* 
+ * PDF NOTES VAULT STYLES - PRINCY EDUCATION HUB
+ * Subject filters, file display grids, and interactive mockup reading modal
+ */
+
+.pdf-vault-container {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 30px;
+  margin-top: 20px;
+}
+
+/* --- Filter Sidebar --- */
+.vault-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.filter-group-title {
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  color: var(--text-sub);
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.filter-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filter-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: var(--border-radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-sub);
+  font-weight: 500;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: var(--transition-smooth);
+}
+
+.filter-btn:hover {
+  background: var(--card-border);
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  background: var(--accent-bg);
+  border-color: var(--card-border);
+  color: var(--accent);
+  font-weight: 700;
+}
+
+/* --- PDF Library Grid --- */
+.pdf-grid-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.pdf-files-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.pdf-card {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 220px;
+}
+
+.pdf-card-top {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.pdf-icon-box {
+  width: 46px;
+  height: 46px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.pdf-card-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.pdf-subject-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  background: var(--card-border);
+  border-radius: 4px;
+  color: var(--text-sub);
+  display: inline-block;
+}
+
+.pdf-card-bottom {
+  border-top: 1px solid var(--card-border);
+  padding-top: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.pdf-meta-size {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+}
+
+.pdf-meta-size span {
+  display: block;
+  font-size: 0.7rem;
+}
+
+.pdf-action-group {
+  display: flex;
+  gap: 8px;
+}
+
+.pdf-action-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-sub);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.pdf-action-btn:hover {
+  background: var(--accent);
+  color: var(--text-light);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* --- Interactive Mock PDF Modal Reader --- */
+.pdf-reader-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(13, 20, 35, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.pdf-reader-modal.active {
+  display: flex;
+}
+
+.reader-container {
+  width: 90vw;
+  max-width: 800px;
+  height: 85vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.reader-toolbar {
+  height: 60px;
+  background: var(--bg-nav);
+  border-bottom: 1.5px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.reader-title-area {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.reader-title-area i {
+  color: #ef4444;
+}
+
+.reader-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.reader-page-indicator {
+  font-size: 0.85rem;
+  color: var(--text-sub);
+}
+
+.reader-btn {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 8px 12px;
+  border-radius: var(--border-radius-sm);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: var(--transition-smooth);
+}
+
+.reader-btn:hover {
+  background: var(--accent);
+  color: var(--text-light);
+  border-color: var(--accent);
+}
+
+.reader-content-body {
+  flex: 1;
+  background: #f8fafc;
+  color: #1e293b;
+  padding: 40px;
+  overflow-y: auto;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.7;
+}
+
+.reader-study-page {
+  background: #fff;
+  padding: 50px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border-radius: 4px;
+  max-width: 650px;
+  margin: 0 auto 30px;
+  min-height: 700px;
+}
+
+.reader-study-page h2 {
+  text-align: center;
+  font-size: 1.8rem;
+  color: #1e3a8a;
+  border-bottom: 2px solid #3b82f6;
+  padding-bottom: 12px;
+  margin-bottom: 30px;
+}
+
+.study-section {
+  margin-bottom: 24px;
+}
+
+.study-section h3 {
+  font-size: 1.25rem;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.study-section p {
+  font-size: 0.98rem;
+  color: #334155;
+  text-align: justify;
+}
+
+.study-bullets {
+  margin: 12px 0 12px 20px;
+}
+
+.study-bullets li {
+  margin-bottom: 8px;
+  font-size: 0.98rem;
+}
+
+/* --- Responsive Adaptations --- */
+@media (max-width: 768px) {
+  .pdf-vault-container {
+    grid-template-columns: 1fr;
+  }
+  
+  .reader-study-page {
+    padding: 24px;
+  }
+  
+  .reader-container {
+    width: 95vw;
+    height: 90vh;
+  }
+}
