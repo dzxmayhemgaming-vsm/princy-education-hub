@@ -1823,11 +1823,30 @@ const pdfVaultController = {
     const pdf = window.EXAMS_DATABASE.pdfs.find(p => p.id === pdfId);
     if (!pdf) return;
     
-    window.showToastAlert(`Downloading ${pdf.title}... Please wait.`, 'warning');
+    const realPdfs = {
+      'pdf-2': 'assets/pdfs/ras-pre-2023.pdf',
+      'pdf-5': 'assets/pdfs/patwari-2021.pdf',
+      'pdf-8': 'assets/pdfs/reet-l2-2022.pdf',
+      'pdf-9': 'assets/pdfs/police-si-2021-hindi.pdf'
+    };
     
-    setTimeout(() => {
-      window.showToastAlert(`Downloaded successfully: ${pdf.title} (${pdf.size}) saved.`, 'success');
-    }, 2000);
+    const filePath = realPdfs[pdfId];
+    if (filePath) {
+      // Trigger genuine browser download
+      window.showToastAlert(`Downloading official exam paper: ${pdf.title}`, 'success');
+      const link = document.createElement('a');
+      link.href = filePath;
+      link.download = filePath.substring(filePath.lastIndexOf('/') + 1);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      // Simulation for handwritten/revision notes
+      window.showToastAlert(`Preparing notes download: ${pdf.title}...`, 'warning');
+      setTimeout(() => {
+        window.showToastAlert(`Success: ${pdf.title} (${pdf.size}) saved.`, 'success');
+      }, 1500);
+    }
   },
   
   openPdfViewer(pdfId) {
@@ -1840,8 +1859,41 @@ const pdfVaultController = {
     const modal = document.getElementById('viewer-modal');
     document.getElementById('pdf-viewer-title').innerText = pdf.title;
     
+    const realPdfs = {
+      'pdf-2': 'assets/pdfs/ras-pre-2023.pdf',
+      'pdf-5': 'assets/pdfs/patwari-2021.pdf',
+      'pdf-8': 'assets/pdfs/reet-l2-2022.pdf',
+      'pdf-9': 'assets/pdfs/police-si-2021-hindi.pdf'
+    };
+    
+    const filePath = realPdfs[pdfId];
+    const area = document.getElementById('pdf-viewer-content-area');
+    
+    const pageIndicator = document.getElementById('pdf-viewer-pages');
+    const prevBtn = document.getElementById('pdf-prev-page-btn');
+    const nextBtn = document.getElementById('pdf-next-page-btn');
+    
+    if (filePath) {
+      // Iframe container mode to fill modal perfectly and render actual PDF
+      area.style.padding = '0';
+      area.style.overflow = 'hidden';
+      pageIndicator.style.display = 'none';
+      prevBtn.style.display = 'none';
+      nextBtn.style.display = 'none';
+      
+      area.innerHTML = `<iframe src="${filePath}" width="100%" height="100%" style="border: none; display: block; background: #525659;"></iframe>`;
+    } else {
+      // Interactive HTML mockup mode for general notes
+      area.style.padding = '40px';
+      area.style.overflowY = 'auto';
+      pageIndicator.style.display = 'inline-block';
+      prevBtn.style.display = 'inline-block';
+      nextBtn.style.display = 'inline-block';
+      
+      this.renderMockPageText();
+    }
+    
     modal.classList.add('active');
-    this.renderMockPageText();
   },
   
   renderMockPageText() {
@@ -1881,6 +1933,7 @@ const pdfVaultController = {
     
     closeBtn.addEventListener('click', () => {
       document.getElementById('viewer-modal').classList.remove('active');
+      document.getElementById('pdf-viewer-content-area').innerHTML = '';
     });
     
     prevBtn.addEventListener('click', () => {
