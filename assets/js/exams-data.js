@@ -405,7 +405,9 @@ const EXAMS_DATABASE = {
     { id: "pdf-4", title: "राजस्थान की कला एवं संस्कृति (Art & Culture Notes)", subject: "Rajasthan GK", size: "6.2 MB", category: "notes", downloadCount: "3.1k" },
     { id: "pdf-5", title: "RSMSSB Patwari 2021 Previous Year Paper PDF", subject: "Previous Papers", size: "1.8 MB", category: "papers", downloadCount: "920" },
     { id: "pdf-6", title: "राजस्थान आर्थिक समीक्षा 2025-26 (Rajasthan Economic Review)", subject: "Current Affairs", size: "8.5 MB", category: "current", downloadCount: "4.5k" },
-    { id: "pdf-7", title: "General Hindi Grammar Guide for SI and LDC", subject: "Hindi", size: "5.1 MB", category: "notes", downloadCount: "1.7k" }
+    { id: "pdf-7", title: "General Hindi Grammar Guide for SI and LDC", subject: "Hindi", size: "5.1 MB", category: "notes", downloadCount: "1.7k" },
+    { id: "pdf-8", title: "REET Level-2 2022 Solved Paper with Detailed Solutions", subject: "Previous Papers", size: "3.2 MB", category: "papers", downloadCount: "1.8k" },
+    { id: "pdf-9", title: "Rajasthan Police SI 2021 General Hindi Solved Paper with Solution", subject: "Previous Papers", size: "2.9 MB", category: "papers", downloadCount: "1.1k" }
   ],
 
   dailyGK: [
