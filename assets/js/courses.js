@@ -1,11 +1,15 @@
 /* 
  * COURSES & CLASSROOM CONTROLLER - PRINCY EDUCATION HUB
  * Course Progress Dashboard, Collapsible playlists, Simulated E-Lecture stream, and Toast triggers
+ * Custom interactive offline mock video player replacing external YouTube frames.
  */
 
 const coursesController = {
   activeCourse: null,
   activeLecture: null,
+  playInterval: null,
+  currentTime: 0,
+  isPlaying: false,
   
   init() {
     window.coursesController = this;
@@ -91,6 +95,9 @@ const coursesController = {
     if (!course) return;
     
     this.activeCourse = course;
+    this.isPlaying = false;
+    this.currentTime = 0;
+    if (this.playInterval) clearInterval(this.playInterval);
     
     // Auto-select first uncompleted lecture or first lecture
     let firstLec = null;
@@ -173,8 +180,49 @@ const coursesController = {
         <div class="classroom-layout">
           <!-- Left side: Player -->
           <div class="classroom-player-section">
-            <div class="video-container-wrapper">
-              <iframe class="classroom-video-player" src="${lec.videoUrl}?autoplay=0&enablejsapi=1" title="YouTube video player" allowfullscreen></iframe>
+            <div class="video-container-wrapper" id="custom-video-player-container" style="position: relative;">
+              <!-- 100% Custom Mock Interactive Video Player Canvas -->
+              <div class="mock-player-canvas" style="width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: space-between; background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); position: relative; cursor: pointer;">
+                
+                <!-- Center Big Play overlay -->
+                <div class="mock-play-overlay" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; flex-direction: column; align-items: center; gap: 12px; z-index: 10; transition: var(--transition-smooth);" id="player-play-btn">
+                  <div style="width: 76px; height: 76px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; box-shadow: var(--glow-accent);"><i class="fa-solid fa-play" style="margin-left: 6px;" id="play-icon-state"></i></div>
+                  <span style="font-size: 0.8rem; font-weight: 700; color: rgba(255,255,255,0.8); letter-spacing: 0.05em; text-transform: uppercase;">शुरू करें / Click to Play</span>
+                </div>
+                
+                <!-- Video Watermark / Logo -->
+                <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; color: rgba(255,255,255,0.4); font-size: 0.85rem; font-weight: 600; z-index: 5; pointer-events: none;">
+                  <span><i class="fa-solid fa-graduation-cap"></i> Princy Education Hub</span>
+                  <span style="font-size: 0.75rem; letter-spacing: 0.05em; background: rgba(255,255,255,0.08); padding: 4px 10px; border-radius: 20px; color: var(--accent);">Digital Classroom</span>
+                </div>
+                
+                <!-- Center topic details visual -->
+                <div style="text-align: center; color: #fff; padding: 0 40px; z-index: 5; pointer-events: none;" id="player-topic-info">
+                  <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; color: var(--accent);">${lec.title}</h3>
+                  <p style="font-size: 0.95rem; color: rgba(255,255,255,0.5);">${course.instructor}</p>
+                </div>
+                
+                <!-- Custom Control Bar -->
+                <div style="background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%); padding: 20px; z-index: 5;">
+                  <!-- Progress Bar timeline -->
+                  <div style="width: 100%; height: 6px; background: rgba(255,255,255,0.25); border-radius: 3px; cursor: pointer; margin-bottom: 15px; position: relative;" id="player-timeline-bg">
+                    <div style="height: 100%; width: 0%; background: var(--accent); border-radius: 3px; transition: width 0.1s linear;" id="player-timeline-fill"></div>
+                  </div>
+                  
+                  <!-- Controls Row -->
+                  <div style="display: flex; justify-content: space-between; align-items: center; color: #fff; font-size: 0.9rem; pointer-events: auto;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                      <i class="fa-solid fa-play" style="cursor: pointer; color: var(--accent); font-size: 1.1rem; width: 15px;" id="player-bottom-play-btn"></i>
+                      <span style="font-size: 0.8rem; font-family: monospace; color: rgba(255,255,255,0.7);" id="player-time-display">00:00 / ${lec.duration}</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 16px;">
+                      <i class="fa-solid fa-volume-high" style="cursor: pointer; transition: var(--transition-smooth);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'"></i>
+                      <i class="fa-solid fa-gear" style="cursor: pointer; transition: var(--transition-smooth);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'"></i>
+                      <i class="fa-solid fa-expand" style="cursor: pointer; transition: var(--transition-smooth);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='#fff'"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             
             <div class="glass-card classroom-details" style="border-radius: var(--border-radius-md);">
@@ -215,6 +263,9 @@ const coursesController = {
         </div>
       </div>
     `;
+    
+    // Attach Player Event Handlers
+    this.initPlayerEvents();
   },
   
   toggleChapter(headerEl) {
@@ -230,6 +281,10 @@ const coursesController = {
       if (foundLec) break;
     }
     if (!foundLec) return;
+    
+    this.isPlaying = false;
+    this.currentTime = 0;
+    if (this.playInterval) clearInterval(this.playInterval);
     
     this.activeLecture = foundLec;
     this.renderClassroomWorkspace(document.getElementById('app-viewport-container'));
@@ -268,6 +323,108 @@ const coursesController = {
     
     // Rerender layout to show completed tick on playlist sidebar
     this.renderClassroomWorkspace(document.getElementById('app-viewport-container'));
+  },
+  
+  initPlayerEvents() {
+    const playBtn = document.getElementById('player-play-btn');
+    const bottomPlayBtn = document.getElementById('player-bottom-play-btn');
+    const timelineBg = document.getElementById('player-timeline-bg');
+    
+    if (!playBtn) return;
+    
+    const togglePlay = () => {
+      this.isPlaying = !this.isPlaying;
+      this.updatePlayerUI();
+      
+      if (this.isPlaying) {
+        // Parse duration (e.g. "45 mins" -> seconds = 45 * 60)
+        const durationStr = this.activeLecture.duration;
+        const totalMins = parseInt(durationStr);
+        const totalSecs = totalMins * 60;
+        
+        // Start simulated progression tick
+        this.playInterval = setInterval(() => {
+          this.currentTime += 1;
+          
+          if (this.currentTime >= totalSecs) {
+            clearInterval(this.playInterval);
+            this.isPlaying = false;
+            this.updatePlayerUI();
+            this.completeActiveLecture();
+            return;
+          }
+          
+          this.updatePlayerTimeUI(totalSecs);
+        }, 1000);
+      } else {
+        clearInterval(this.playInterval);
+      }
+    };
+    
+    playBtn.addEventListener('click', togglePlay);
+    bottomPlayBtn.addEventListener('click', togglePlay);
+    
+    // Timeline click simulator
+    timelineBg.addEventListener('click', (e) => {
+      const rect = timelineBg.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const pct = clickX / width;
+      
+      const durationStr = this.activeLecture.duration;
+      const totalMins = parseInt(durationStr);
+      const totalSecs = totalMins * 60;
+      
+      this.currentTime = Math.round(pct * totalSecs);
+      
+      this.updatePlayerTimeUI(totalSecs);
+      if (!this.isPlaying) {
+        this.updatePlayerUI();
+      }
+    });
+  },
+  
+  updatePlayerUI() {
+    const playBtn = document.getElementById('player-play-btn');
+    const bottomPlayBtn = document.getElementById('player-bottom-play-btn');
+    const playIconState = document.getElementById('play-icon-state');
+    
+    if (this.isPlaying) {
+      playBtn.style.opacity = '0';
+      playBtn.style.pointerEvents = 'none';
+      bottomPlayBtn.className = 'fa-solid fa-pause';
+      bottomPlayBtn.style.color = 'var(--accent)';
+    } else {
+      playBtn.style.opacity = '1';
+      playBtn.style.pointerEvents = 'auto';
+      playIconState.className = 'fa-solid fa-play';
+      bottomPlayBtn.className = 'fa-solid fa-play';
+      bottomPlayBtn.style.color = 'var(--accent)';
+    }
+  },
+  
+  updatePlayerTimeUI(totalSecs) {
+    const fill = document.getElementById('player-timeline-fill');
+    const display = document.getElementById('player-time-display');
+    
+    const pct = (this.currentTime / totalSecs) * 100;
+    if (fill) fill.style.width = `${pct}%`;
+    
+    // Format times MM:SS
+    const formatTime = (secs) => {
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    };
+    
+    if (display) {
+      display.innerText = `${formatTime(this.currentTime)} / ${this.activeLecture.duration}`;
+    }
+    
+    // Proactively complete lecture after 8 seconds in the demo for student's instant feedback & wow factor!
+    if (this.currentTime === 8 && !this.activeLecture.completed) {
+      this.completeActiveLecture();
+    }
   }
 };
 
