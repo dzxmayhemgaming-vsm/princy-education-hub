@@ -140,7 +140,7 @@ const spaRouter = {
   renderHome(container) {
     const stats = [
       { num: "32+", label: "CBT Mock Tests", icon: "fa-clipboard-question" },
-      { num: "450+", label: "Video Lectures", icon: "fa-clapperboard" },
+      { num: "450+", label: "Study Topics", icon: "fa-book" },
       { num: "150+", label: "revision Notes PDFs", icon: "fa-file-pdf" },
       { num: "45k+", label: "active Students", icon: "fa-users-line" }
     ];
@@ -178,7 +178,7 @@ const spaRouter = {
           <div>
             <span class="hero-tagline"><i class="fa-solid fa-star"></i> #1 preparation Platform in Rajasthan</span>
             <h1 class="hero-title">Rajasthan कॉम्पिटिटिव एग्जाम्स की<br>तैयारी अब <span>Princy Hub</span> के साथ!</h1>
-            <p class="hero-desc">अग्रणी शिक्षकों द्वारा तैयार किए गए उत्कृष्ट मॉक टेस्ट सीरीज़, संपूर्ण विस्तृत कोर्स व्याख्यान, हस्तलिखित शार्ट रिवीज़न नोट्स, और दैनिक सामान्य ज्ञान चैलेंज। सभी अध्ययन सामग्री एक स्थान पर उपलब्ध।</p>
+            <p class="hero-desc">अग्रणी शिक्षकों द्वारा तैयार किए गए उत्कृष्ट मॉक टेस्ट सीरीज़, संपूर्ण विस्तृत कोर्स स्टडी गाइड्स, हस्तलिखित शार्ट रिवीज़न नोट्स, और दैनिक सामान्य ज्ञान चैलेंज। सभी लिखित अध्ययन सामग्री एक स्थान पर उपलब्ध।</p>
             
             <div class="search-box-wrapper">
               <input type="text" placeholder="अपने परीक्षा की खोज करें (जैसे RAS, REET, Police SI...)" class="search-input" id="global-exam-search">
